@@ -6,7 +6,8 @@ import time
 from PIL import Image
 import os
 import requests
-import datetime
+from datetime import datetime
+from dateutil import tz
 
 project_path = os.path.dirname(os.path.abspath(__file__))
 url = f'file://{project_path}/index_result.html'
@@ -138,6 +139,12 @@ def init_driver():
     return driver
 
 
+def get_CST_time():
+    to_zone = tz.gettz('CST')
+    from_zone = tz.gettz('UTC')
+    utc = datetime.utcnow().replace(tzinfo=from_zone)
+    return utc.astimezone(to_zone)
+
 def get_screenprint():
     driver = init_driver()
 
@@ -156,8 +163,10 @@ def get_screenprint():
     # Crop the image
     im = Image.open(img_path)
     im = im.crop((left, top, right, bottom))
+    if os.path.exists(img_path):
+        os.remove(img_path)
     im.save(img_path)
-    os.rename(img_path, os.path.join("output", datetime.datetime.now().strftime("%Y-%m-%d") + '.png'))
+    os.rename(img_path, os.path.join("output", get_CST_time().strftime("%Y-%m-%d") + '.png'))
 
 
 def get_current_weather_info(lat=22.7897499, lon=114.4561802):
@@ -278,7 +287,7 @@ if __name__ == '__main__':
             "vis": float(weather_info['vis']),
             "dewpt": int(weather_info['dewPt']),
             "baro": int(weather_info['baro']),
-            "nowtime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "nowtime": get_CST_time().strftime("%Y-%m-%d %H:%M:%S"),
         }
         with open("index.html", encoding="utf-8") as f:
             file = f.read()
