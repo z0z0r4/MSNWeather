@@ -10,7 +10,11 @@ import datetime
 
 project_path = os.path.dirname(os.path.abspath(__file__))
 url = f'file://{project_path}/index_result.html'
-img_path = 'screenprint.png'
+
+if os.path.exists("output"):
+    os.makedirs("output")
+
+img_path = os.path.join("output", 'screenprint.png')
 
 if os.path.exists(img_path):
     os.remove(img_path)
@@ -137,23 +141,23 @@ def init_driver():
 def get_screenprint():
     driver = init_driver()
 
-    for _i in range(10):
-        # Load the page
-        driver.get(url)
+    # Load the page
+    driver.get(url)
 
-        # Get the element
-        element_xpath = '/html/body'
-        driver.get_screenshot_as_file(img_path)
-        e = driver.find_element(By.XPATH, element_xpath)
-        left = e.location['x']
-        top = e.location['y']
-        right = e.location['x'] + 612
-        bottom = e.location['y'] + 270
+    # Get the element
+    element_xpath = '/html/body'
+    driver.get_screenshot_as_file(img_path)
+    e = driver.find_element(By.XPATH, element_xpath)
+    left = e.location['x']
+    top = e.location['y']
+    right = e.location['x'] + 612
+    bottom = e.location['y'] + 270
 
-        # Crop the image
-        im = Image.open(img_path)
-        im = im.crop((left, top, right, bottom))
-        im.save(img_path)
+    # Crop the image
+    im = Image.open(img_path)
+    im = im.crop((left, top, right, bottom))
+    im.save(img_path)
+    os.rename(img_path, datetime.datetime.now().strftime("%Y-%m-%d") + '.png')
 
 
 def get_current_weather_info(lat=22.7897499, lon=114.4561802):
