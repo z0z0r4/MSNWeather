@@ -1,0 +1,52 @@
+# 爬取 MSNWeather 并缓存到 GitHub
+
+name: Spider MSNWeather
+
+# Controls when the workflow will run
+on:
+  # push:
+  schedule:
+    - cron: '0 22 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          
+      - name: Run script
+        run: |
+          python main.py
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-bot@example.com"
+          git config --local user.name "Github-Bot"
+          git add .
+          git commit -m "Update Weather"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
