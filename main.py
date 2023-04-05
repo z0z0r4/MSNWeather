@@ -11,7 +11,7 @@ import datetime
 project_path = os.path.dirname(os.path.abspath(__file__))
 url = f'file://{project_path}/index_result.html'
 
-if os.path.exists("output"):
+if not os.path.exists("output"):
     os.makedirs("output")
 
 img_path = os.path.join("output", 'screenprint.png')
