@@ -23,7 +23,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
+      - name: Setup Chrome
+        run: |
+          sudo apt install wget -y
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install ./google-chrome-stable_current_amd64.deb
+          wget https://chromedriver.storage.googleapis.com/112.0.5615.28/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo chmod +x chromedriver
+          sudo mv -f chromedriver /usr/local/share/chromedriver
+          sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+          sudo ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
+          chromedriver --version
+          
       # Runs a single command using the runners shell
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -38,12 +50,12 @@ jobs:
       - name: Run script
         run: |
           python main.py
-      
+          
       - name: Commit changes
         run: |
           git config --local user.email "github-bot@example.com"
           git config --local user.name "Github-Bot"
-          git add .
+          git add output
           git commit -m "Update Weather"
       
       - name: Push changes
