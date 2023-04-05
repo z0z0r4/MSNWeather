@@ -157,7 +157,7 @@ def get_screenprint():
     im = Image.open(img_path)
     im = im.crop((left, top, right, bottom))
     im.save(img_path)
-    os.rename(img_path, datetime.datetime.now().strftime("%Y-%m-%d") + '.png')
+    os.rename(img_path, os.path.join("output", datetime.datetime.now().strftime("%Y-%m-%d") + '.png'))
 
 
 def get_current_weather_info(lat=22.7897499, lon=114.4561802):
