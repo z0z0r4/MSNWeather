@@ -143,7 +143,9 @@ def get_CST_time():
     to_zone = tz.gettz('CST')
     from_zone = tz.gettz('UTC')
     utc = datetime.utcnow().replace(tzinfo=from_zone)
-    return utc.astimezone(to_zone)
+    cst =  utc.astimezone(to_zone)
+    print(to_zone, from_zone, utc, cst)
+    return cst
 
 def get_screenprint():
     driver = init_driver()
@@ -289,7 +291,6 @@ if __name__ == '__main__':
             "baro": int(weather_info['baro']),
             "nowtime": get_CST_time().strftime("%Y-%m-%d %H:%M:%S"),
         }
-        print(info)
         with open("index.html", encoding="utf-8") as f:
             file = f.read()
             for key, value in info.items():
