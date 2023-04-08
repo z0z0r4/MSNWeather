@@ -262,7 +262,7 @@ def get_background_by_icon(icon):
     if icon in icon_to_background_key:
         return background_urls[icon_to_background_key[icon]]
     else:
-        return 'file://{project_root}/black_ground.png'
+        return 'file://{project_root}/black_background.png'
 
 
 if __name__ == '__main__':
