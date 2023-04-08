@@ -6,7 +6,7 @@ import time
 from PIL import Image
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from dateutil import tz
 
 project_path = os.path.dirname(os.path.abspath(__file__))
@@ -133,17 +133,13 @@ def init_driver():
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    # options.add_argument('window-size=1280*720')
     driver = webdriver.Chrome(options=options)
-    # driver.maximize_window()
     return driver
 
 
 def get_CST_time():
-    to_zone = tz.gettz('CST')
-    from_zone = tz.gettz('UTC')
-    utc = datetime.utcnow().replace(tzinfo=from_zone)
-    return utc.astimezone(to_zone)
+    utc_dt = datetime.utcnow().replace(tzinfo=timezone.utc)
+    return utc_dt.astimezone(timezone(timedelta(hours=8)))
 
 def get_screenprint():
     driver = init_driver()
