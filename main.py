@@ -289,6 +289,7 @@ if __name__ == '__main__':
             "baro": int(weather_info['baro']),
             "nowtime": get_CST_time().strftime("%Y-%m-%d %H:%M:%S"),
         }
+        print(info)
         with open("index.html", encoding="utf-8") as f:
             file = f.read()
             for key, value in info.items():
